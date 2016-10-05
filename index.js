@@ -1,0 +1,62 @@
+var request = require('request');
+var spotify = require('spotify');
+var fs = require('fs');
+var keys = require('./keys.js');
+
+
+function myTweets() {
+	var params = {
+		screen_name: 'lexiconman'
+	};
+	var twitterKeys = keys.twitterKeys;
+	twitterKeys.get('statuses/user_timeline', params, function(error, tweets, response) {
+		if(!error) {
+			for(var t = 0; t < tweets.length; t++) {
+				console.log('\n' + '@' + params.screen_name + ' said ' + tweets[t].text + ' at ' + tweets[t].created_at +'\n');
+			}
+		} else {
+			console.log('twitter error');
+		}
+	});
+}
+
+function spotifyThisSong() {
+	spotify.search({type: 'track', query: process.argv[3]}, function(error, data) {
+			if(!error) {
+				var thisSong = data.tracks.items[0];
+				for(var a = 0; a < thisSong.artists.length; a++) {
+					var artistConcat = thisSong.artists[0].name;
+					if(thisSong.artists.length > 1) {
+						artistConcat += ', ' + thisSong.artists[a].name;
+					}
+					console.log('\nArtist: ' + artistConcat + '\nSong Title: ' + thisSong.name + '\nOriginal Album: ' + thisSong.album.name + '\nPreview: ' + thisSong.preview_url + '\n');
+				}
+			} else {
+				console.log('spotify error');
+			}
+		});
+}
+
+function movieThis() {
+
+}
+function doWhatItSays() {
+
+}
+
+switch(process.argv[2]) {
+	case 'my-tweets':
+		myTweets();
+		break;
+	case 'spotify-this-song':
+		spotifyThisSong();
+		break;
+	case 'movie-this':
+		movieThis();
+		break;
+	case 'do-what-it-says':
+		doWhatItSays();
+		break;
+	default:
+		console.log("I don't know how to do that.  Please try again!");
+}

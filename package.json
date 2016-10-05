@@ -1,0 +1,25 @@
+{
+  "name": "sarahs-liribot",
+  "version": "1.0.0",
+  "description": "Language recognition node app",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slsriehl/liribot.git"
+  },
+  "author": "Sarah Riehl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slsriehl/liribot/issues"
+  },
+  "homepage": "https://github.com/slsriehl/liribot#readme",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "request": "^2.75.0",
+    "spotify": "^0.3.0",
+    "twitter": "^1.4.0"
+  }
+}
