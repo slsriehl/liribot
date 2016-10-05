@@ -21,18 +21,23 @@ function myTweets() {
 }
 
 function spotifyThisSong() {
-	spotify.search({type: 'track', query: process.argv[3]}, function(error, data) {
-			if(!error) {
-				var thisSong = data.tracks.items[0];
-				for(var a = 0; a < thisSong.artists.length; a++) {
-					var artistConcat = thisSong.artists[0].name;
-					if(thisSong.artists.length > 1) {
-						artistConcat += ', ' + thisSong.artists[a].name;
-					}
-					console.log('\nArtist: ' + artistConcat + '\nSong Title: ' + thisSong.name + '\nOriginal Album: ' + thisSong.album.name + '\nPreview: ' + thisSong.preview_url + '\n');
+	var spotQuery = process.argv[3];
+	if(!process.argv[3]) {
+		spotQuery = 'The Sign Ace of Base';
+	}
+	spotify.search({type: 'track', query: spotQuery}, function(error, data) {
+		console.log(data.tracks.items[0].artists);
+		var thisSong;
+			if(!error && (data.tracks.items.length >= 1)) {
+				thisSong = data.tracks.items[0];
+				var artistConcat = thisSong.artists[0].name;
+				for(var a = 1; a < thisSong.artists.length; a++) {
+					artistConcat += ', ' + thisSong.artists[a].name;
 				}
+				console.log('\nArtist: ' + artistConcat + '\nSong Title: ' + thisSong.name + '\nOriginal Album: ' + thisSong.album.name + '\nPreview: ' + thisSong.preview_url + '\n');
+			
 			} else {
-				console.log('spotify error');
+				console.log('spotify error or there is no song matching that title.');
 			}
 		});
 }
