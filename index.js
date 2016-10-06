@@ -2,7 +2,8 @@ var request = require('request');
 var spotify = require('spotify');
 var fs = require('fs');
 var keys = require('./keys.js');
-
+var querystring = require('querystring');
+var randomText = require('./random.js');
 
 function myTweets() {
 	var params = {
@@ -26,7 +27,6 @@ function spotifyThisSong() {
 		spotQuery = 'The Sign Ace of Base';
 	}
 	spotify.search({type: 'track', query: spotQuery}, function(error, data) {
-		console.log(data.tracks.items[0].artists);
 		var thisSong;
 			if(!error && (data.tracks.items.length >= 1)) {
 				thisSong = data.tracks.items[0];
@@ -34,7 +34,7 @@ function spotifyThisSong() {
 				for(var a = 1; a < thisSong.artists.length; a++) {
 					artistConcat += ', ' + thisSong.artists[a].name;
 				}
-				console.log('\nArtist: ' + artistConcat + '\nSong Title: ' + thisSong.name + '\nOriginal Album: ' + thisSong.album.name + '\nPreview: ' + thisSong.preview_url + '\n');
+				console.log('\nSong Info \n\nArtist: ' + artistConcat + '\n\nSong Title: ' + thisSong.name + '\n\nOriginal Album: ' + thisSong.album.name + '\n\nPreview: ' + thisSong.preview_url + '\n');
 			
 			} else {
 				console.log('spotify error or there is no song matching that title.');
@@ -43,7 +43,24 @@ function spotifyThisSong() {
 }
 
 function movieThis() {
+	var queryProps = {
+		t: process.argv[3],
+		plot: 'full',
+		r: 'json',
+		tomatoes: true
+	}
+	if(!process.argv[3]) {
+		queryProps.t = 'Mr. Nobody';
+	}
+	var queryUrl = 'http://www.omdbapi.com/?' + querystring.stringify(queryProps);
 
+	request(queryUrl, function(error, response, body) {
+		if(!error && response.statusCode == 200) {
+			console.log('\nMovie Info \n\nTitle: ' + JSON.parse(body)['Title'] + '\n\nRelease Date: ' + JSON.parse(body)['Released'] + '\n\nIMDB Rating: ' + JSON.parse(body)['imdbRating'] + '\n\nProduction Country: ' + JSON.parse(body)['Country'] + '\n\nLanguage: ' + JSON.parse(body)['Language'] + '\n\nSynopsis: ' + JSON.parse(body)['Plot'] + '\n\nActors: ' + JSON.parse(body)['Actors'] + '\n\nRotten Tomatoes Rating: ' + JSON.parse(body)['tomatoRating'] + '\n\nLearn more at Rotten Tomatoes: ' + JSON.parse(body)['tomatoURL'] + '\n'); 
+		} else {
+			console.log('omdb error or nothing matches your search.');
+		}
+	});
 }
 function doWhatItSays() {
 
